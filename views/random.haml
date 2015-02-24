@@ -17,4 +17,29 @@
         %button#backtosearch
           %i{'class': 'fa fa-search'}
 
-    %script{'src': '/result.js'}
+    :javascript
+      $(document).ready(function() {
+          $('#newepisode').click(function() {
+            $('#newepisode i').toggleClass('fa-spin');
+            $.ajax({
+              url: '/api/random/#{show.sid}',
+              type: 'GET',
+              dataType: 'json',
+              timeout: 60000,
+              error: function() {
+                  $('#newepisode').toggleClass('fa-spin');
+                  return false;
+              },
+              success: function(msg) {
+                  $('#randomepisode h1').html(msg.title);
+                  $('#randomepisode h3').html("(" + msg.episode_no + ")");
+                  $('#newepisode i').toggleClass('fa-spin');
+                  return true;
+              }
+            });
+          });
+
+          $('#backtosearch').click(function() {
+              window.location.href = '/'
+          });
+      });

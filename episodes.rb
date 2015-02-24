@@ -17,3 +17,10 @@ get '/api/autocomplete' do
   res = TVRage::Search.new(params[:term]).execute
   haml :results, 'locals': { 'res': res }
 end
+
+get '/api/random/:sid' do
+  content_type :json
+  show = TVRage::Show.new(params[:sid])
+  ep = show.random_episode
+  { title: ep.title, episode_no: "#{ep.season}&times;#{ep.episode_number}" }.to_json
+end
