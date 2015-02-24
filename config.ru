@@ -1,2 +1,2 @@
-require "./randomepisode.rb"
+require "./episodes.rb"
 run Sinatra::Application

@@ -6,5 +6,5 @@ ruby '2.2.0'
 # gem "rails"
 gem 'sinatra'
 gem 'haml'
-gem 'rest_client'
+gem 'rest-client'
 gem 'nokogiri'

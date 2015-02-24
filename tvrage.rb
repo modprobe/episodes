@@ -1,9 +1,7 @@
-require 'sinatra'
-require 'haml'
-require 'rest_client'
+require 'restclient'
 require 'nokogiri'
 
-module TVRageAPI
+module TVRage
   API_URL = 'http://services.tvrage.com/feeds'
 
   class Episode
@@ -21,7 +19,7 @@ module TVRageAPI
     end
   end
 
-  class TVShow
+  class Show
     attr_accessor :sid, :name, :startyear, :endyear, :episodelist
 
     # TODO: get episode list only when needed
@@ -127,25 +125,10 @@ module TVRageAPI
         started = sh.css('started').text
         ended = sh.css('ended').text
 
-        result << TVShow.new(sid, name, started, ended)
+        result << Show.new(sid, name, started, ended)
       end
       result
     end
   end
 end
 
-get '/' do
-  haml :search
-end
-
-get '/random/:sid' do
-  show = TVRageAPI::TVShow.new(params[:sid])
-  ep = show.random_episode
-  haml :random, 'locals': { 'show': show, 'episode': ep }
-end
-
-get '/autocomplete' do
-  logger.info "Searching for #{params[:term]}"
-  res = TVRageAPI::Search.new(params[:term]).execute
-  haml :results, 'locals': { 'res': res }
-end
