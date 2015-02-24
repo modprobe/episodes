@@ -14,7 +14,7 @@ $(document).ready(function() {
         input = tvInput.val();
         $('#searchcontent').removeClass('fa-search').addClass('fa-refresh fa-spin');
         $.ajax({
-            url: '/autocomplete',
+            url: '/api/autocomplete',
             data: {
                 term: input
             },
