@@ -28,7 +28,6 @@ $(document).ready(function() {
                 return false;
             },
             success: function(msg) {
-                console.log(msg);
                 $('#searchcontent').addClass('fa-search').removeClass('fa-refresh fa-spin');
                 $('#results').html(msg);
                 return true;
