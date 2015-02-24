@@ -19,6 +19,11 @@
 
     :javascript
       $(document).ready(function() {
+          $(document).keypress(function(e) {
+            if(e.which == 32) {
+              $('#newepisode').click();
+            }
+          });
           $('#newepisode').click(function() {
             $('#newepisode i').toggleClass('fa-spin');
             $.ajax({

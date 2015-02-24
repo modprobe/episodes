@@ -35,4 +35,5 @@ div.top-level {
     font-family: "Open Sans",sans-serif;
     font-size: 18px;
     cursor: pointer;
+    outline: none;
 }
