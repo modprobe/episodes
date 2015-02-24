@@ -3,15 +3,17 @@ GEM
   specs:
     haml (4.0.6)
       tilt
+    mime-types (2.4.3)
     mini_portile (0.6.2)
-    netrc (0.7.9)
+    netrc (0.10.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     rack (1.6.0)
     rack-protection (1.5.3)
       rack
-    rest_client (1.8.3)
-      netrc (~> 0.7.7)
+    rest-client (1.7.3)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -24,5 +26,5 @@ PLATFORMS
 DEPENDENCIES
   haml
   nokogiri
-  rest_client
+  rest-client
   sinatra
