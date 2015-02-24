@@ -1,5 +1,6 @@
 require 'restclient'
 require 'nokogiri'
+require 'date'
 
 module TVRage
   API_URL = 'http://services.tvrage.com/feeds'
@@ -49,8 +50,11 @@ module TVRage
 
     def random_episode
       fetch_episodes if @episodelist.nil? || @episodelist.empty?
-      random_index = rand(0..@episodelist.length - 1)
-      @episodelist[random_index]
+      begin
+        random_index = rand(0..@episodelist.length - 1)
+        ep = @episodelist[random_index]
+      end while ep.airdate > Date.today
+      ep
     end
 
     private
@@ -131,4 +135,3 @@ module TVRage
     end
   end
 end
-

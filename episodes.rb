@@ -12,7 +12,7 @@ get '/random/:sid' do
   haml :random, 'locals': { 'show': show, 'episode': ep }
 end
 
-get '/autocomplete' do
+get '/api/autocomplete' do
   logger.info "Searching for #{params[:term]}"
   res = TVRage::Search.new(params[:term]).execute
   haml :results, 'locals': { 'res': res }
