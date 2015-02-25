@@ -12,6 +12,16 @@ get '/random/:sid' do
   haml :random, 'locals': { 'show': show, 'episode': ep }
 end
 
+get '/api/autocomplete/json' do
+  content_type :json
+  res = TVRage::Search.new(params[:term]).execute
+  returnme = []
+  res[0..10].each do |sh|
+    returnme << { label: "#{sh.name} (#{sh.startyear}-#{sh.endyear})", link: "/random/#{sh.sid}", value: sh.name }
+  end
+  returnme.to_json
+end
+
 get '/api/autocomplete' do
   logger.info "Searching for #{params[:term]}"
   res = TVRage::Search.new(params[:term]).execute

@@ -49,22 +49,46 @@ button#searchbutton {
     color: white;
 }
 
-.wrapper#results {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    padding-left: 10%;
-    padding-right: 15%;
-    text-align: justify;
+ul.ui-autocomplete {
+    width: 50%;
+    background: rgba(255, 255, 255, 0);
+    padding-left: 3px;
+    padding-right: 1%;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
-ul#results li {
-    list-style: none;
-    font-family: "Open Sans",sans-serif;
+ul.ui-autocomplete li{
+    font-family: "Open Sans", sans-serif;
+    color: white;
+    list-style:none;
+    border-top:1px solid #fff;
+    padding: 7px 0;
 }
 
-ul#results li h3 a {
-    font-weight: bold;
-    color: #fff;
-    text-decoration: none;
+ul.ui-autocomplete li:first-child{
+    border-top:none;
+}
+
+ul.ui-autocomplete li:last-child{
+    border-bottom:none;
+    border-radius: 0 0 8px 8px;
+}
+
+ul.ui-autocomplete li a{
+    color:#999;
+    border:none !important;
+    text-decoration:none !important;
+    /*padding:10px 17px;*/
+    display:block;
+}
+
+.ui-state-focus {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #16161d;
+    cursor: pointer;
+}
+
+.ui-helper-hidden-accessible { 
+    display:none; 
 }
