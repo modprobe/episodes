@@ -5,29 +5,59 @@ require 'date'
 module TVRage
   API_URL = 'http://services.tvrage.com/feeds'
 
-  class JSONable
-    def to_json
-      hash = {}
-      self.instance_variables.each do |var|
-        hash[var] = self.instance_variable_get var
-      end
-      hash.to_json
-    end
-    def from_json! string
-      JSON.load(string).each do |var, val|
-        self.instance_variable_set var, val
-      end
-    end
-  end
+  #class JSONable
+    #def to_json
+      #hash = {}
+      #self.instance_variables.each do |var|
+        #hash[var] = self.instance_variable_get var
+      #end
+      #hash.to_json
+    #end
+    #def from_json! string
+      #JSON.load(string).each do |var, val|
+        #self.instance_variable_set var, val
+      #end
+    #end
+  #end
 
-  class Episode < JSONable
+  class Episode
     attr_accessor :season, :episode_number, :title, :airdate
 
     def initialize(season, epno, title, airdate)
       @season = season
       @episode_number = epno
       @title = title
-      @airdate = airdate
+      if airdate.instance_of? String
+        begin
+          @airdate = Date.parse airdate
+        rescue
+          raise ArgumentError, "not a valid date as airdate"
+        end
+      elsif airdate.instance_of? Date
+        @airdate = airdate
+      end
+    end
+
+    def serialise
+      hash = {}
+      self.instance_variables.each do |var|
+        hash[var] = self.instance_variable_get var
+      end
+      hash.to_json
+    end
+
+    def self.deserialise input
+      hash = if input.instance_of? Hash then input elsif input.instance_of? String then JSON.parse input end
+      temp_obj = Episode.new(nil, nil, nil, nil)
+      hash.each do |key, val|
+        if key == "@airdate"
+          temp_obj.instance_variable_set key, Date.parse(val)
+        else
+          temp_obj.instance_variable_set key, val
+        end
+      end
+
+      temp_obj
     end
 
     def to_s
@@ -35,7 +65,7 @@ module TVRage
     end
   end
 
-  class Show < JSONable
+  class Show
     attr_accessor :sid, :name, :startyear, :endyear, :episodelist
 
     # TODO: get episode list only when needed
@@ -55,8 +85,23 @@ module TVRage
     end
 
     def to_h
-      { 'sid': @sid, 'name': @name, 'started': @startyear, 'ended': @endyear,
-        'episodes': @episodelist }
+      { 'sid': @sid, 'name': @name, 'startyear': @startyear, 'endyear': @endyear,
+        'episodelist': @episodelist }
+    end
+
+    def serialise
+      fetch_episodes if @episodelist.nil? || @episodelist.empty?
+      self.to_h.to_json
+    end
+
+    def self.deserialise string
+      hash = JSON.parse string
+      temp_obj = Show.new nil
+      hash.each do |key, val|
+        temp_obj.instance_variable_set key, val
+      end
+      obj = deserialise_episode_list temp_obj
+      obj
     end
 
     def fetch_episodes
@@ -73,6 +118,15 @@ module TVRage
     end
 
     private
+
+    def self.deserialise_episode_list obj
+      new_eplist = []
+      obj.episodelist.each do |ep|
+        new_eplist << Episode.deserialise(ep)
+      end
+      obj.episodelist = new_eplist
+      obj
+    end
 
     def get_show_info
       xmlres = RestClient.get "#{API_URL}/showinfo.php", params: { 'sid': @sid }
