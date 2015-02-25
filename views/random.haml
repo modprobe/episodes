@@ -17,6 +17,10 @@
         %button#backtosearch
           %i{'class': 'fa fa-search'}
 
+    .footer
+      %a{'href': 'https://www.flickr.com/photos/58782395@N03/5518992555'} Photo
+      by Sweetie187/Flickr under CC BY 2.0
+
     :javascript
       $(document).ready(function() {
           $(document).keypress(function(e) {
@@ -36,7 +40,7 @@
                   return false;
               },
               success: function(msg) {
-                  $('#randomepisode h1').html(msg.title);
+                  $('#randomepisode h1').html('"' + msg.title + '"');
                   $('#randomepisode h3').html("(" + msg.episode_no + ")");
                   $('#newepisode i').toggleClass('fa-spin');
                   return true;
