@@ -1,8 +1,9 @@
 $(document).ready(function() {
     var tvInput = $('#showname');
-    //var searchbutton = $('#searchbutton')
+    var searchbutton = $('#searchbutton')
 
     tvInput.focus();
+
 
     tvInput.autocomplete({
         source: "/api/autocomplete/json",
@@ -27,5 +28,9 @@ $(document).ready(function() {
         close: function() {
             tvInput.css('border-bottom-left-radius', '8px');
         }
+    });
+
+    searchbutton.click(function() {
+        tvInput.autocomplete("search");
     });
 });
