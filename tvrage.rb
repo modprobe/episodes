@@ -5,7 +5,22 @@ require 'date'
 module TVRage
   API_URL = 'http://services.tvrage.com/feeds'
 
-  class Episode
+  class JSONable
+    def to_json
+      hash = {}
+      self.instance_variables.each do |var|
+        hash[var] = self.instance_variable_get var
+      end
+      hash.to_json
+    end
+    def from_json! string
+      JSON.load(string).each do |var, val|
+        self.instance_variable_set var, val
+      end
+    end
+  end
+
+  class Episode < JSONable
     attr_accessor :season, :episode_number, :title, :airdate
 
     def initialize(season, epno, title, airdate)
@@ -20,14 +35,14 @@ module TVRage
     end
   end
 
-  class Show
+  class Show < JSONable
     attr_accessor :sid, :name, :startyear, :endyear, :episodelist
 
     # TODO: get episode list only when needed
 
     def initialize(sid, name = nil, startyear = nil, endyear = nil)
-      @sid = sid
-      if name.nil? && startyear.nil? && endyear.nil?
+      @sid = sid unless sid.nil?
+      if !sid.nil? && name.nil? && startyear.nil? && endyear.nil?
         show_info = get_show_info
         @name = show_info[:name]
         @startyear = show_info[:started]
