@@ -29,21 +29,25 @@ module TVRage
       @title = title
       if airdate.instance_of? String
         begin
-          @airdate = Date.parse airdate
-        rescue
-          raise ArgumentError, "not a valid date as airdate"
+          @airdate = Date.parse(airdate)
+        rescue ArgumentError
+          @airdate = nil
         end
       elsif airdate.instance_of? Date
         @airdate = airdate
       end
     end
 
-    def serialise
+    def serialise(options = {json: false})
       hash = {}
       self.instance_variables.each do |var|
         hash[var] = self.instance_variable_get var
       end
-      hash.to_json
+      if options[:json]
+        hash.to_json
+      else
+        hash
+      end
     end
 
     def self.deserialise input
@@ -51,7 +55,11 @@ module TVRage
       temp_obj = Episode.new(nil, nil, nil, nil)
       hash.each do |key, val|
         if key == "@airdate"
-          temp_obj.instance_variable_set key, Date.parse(val)
+          begin
+            temp_obj.instance_variable_set key, Date.parse(val)
+          rescue
+            temp_obj.instance_variable_set key, nil
+          end
         else
           temp_obj.instance_variable_set key, val
         end
@@ -85,13 +93,15 @@ module TVRage
     end
 
     def to_h
-      { 'sid': @sid, 'name': @name, 'startyear': @startyear, 'endyear': @endyear,
-        'episodelist': @episodelist }
+      { '@sid': @sid, '@name': @name, '@startyear': @startyear, '@endyear': @endyear,
+        '@episodelist': @episodelist }
     end
 
     def serialise
       fetch_episodes if @episodelist.nil? || @episodelist.empty?
-      self.to_h.to_json
+      hash = self.to_h
+      hash2 = serialise_episode_list hash
+      hash2.to_json
     end
 
     def self.deserialise string
@@ -126,6 +136,15 @@ module TVRage
       end
       obj.episodelist = new_eplist
       obj
+    end
+
+    def serialise_episode_list hash
+      new_eplist = []
+      hash[:@episodelist].each do |ep|
+        new_eplist << ep.serialise
+      end
+      hash[:@episodelist] = new_eplist
+      hash
     end
 
     def get_show_info
