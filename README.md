@@ -28,7 +28,7 @@ $ bundle exec ruby episodes.rb
     ```
     $ vim episodes.rb
     ```
-    Uncomment the lines in the helper section and comment out the line above.
+    Uncomment the lines in the `configuration` section and comment out the line above.
 4. Ready to push!
     
     ```
