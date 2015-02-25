@@ -22,13 +22,7 @@ get '/api/autocomplete/json' do
   returnme.to_json
 end
 
-get '/api/autocomplete' do
-  logger.info "Searching for #{params[:term]}"
-  res = TVRage::Search.new(params[:term]).execute
-  haml :results, 'locals': { 'res': res }
-end
-
-get '/api/random/:sid' do
+get '/api/random/:sid/json' do
   content_type :json
   show = TVRage::Show.new(params[:sid])
   ep = show.random_episode

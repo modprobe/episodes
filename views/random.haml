@@ -27,7 +27,7 @@
           $('#newepisode').click(function() {
             $('#newepisode i').toggleClass('fa-spin');
             $.ajax({
-              url: '/api/random/#{show.sid}',
+              url: '/api/random/#{show.sid}/json',
               type: 'GET',
               dataType: 'json',
               timeout: 60000,
