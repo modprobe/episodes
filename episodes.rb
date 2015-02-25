@@ -7,17 +7,25 @@ get '/' do
   haml :search
 end
 
-def load_or_create_show sid
-  redis = Redis.new
-  if redis.exists sid
-    show = TVRage::Show.deserialise redis.get sid
-  else
-    show = TVRage::Show.new(sid)
-    show.fetch_episodes
-    redis.set show.sid, show.serialise, {ex: 7200}
-  end
+configure do
+  REDIS = Redis.new
+  ### UNCOMMENT FOR HEROKU ###
+  # uri = URI.parse(ENV['REDISTOGO_URL'])
+  # REDIS = Redis.new(host: uri.host, port: uri.port, passwort: uri.password)
+end
 
-  show
+helpers do
+  def load_or_create_show sid
+    if REDIS.exists sid
+      show = TVRage::Show.deserialise REDIS.get sid
+    else
+      show = TVRage::Show.new(sid)
+      show.fetch_episodes
+      REDIS.set show.sid, show.serialise, {ex: 7200}
+    end
+
+    show
+  end
 end
 
 get '/random/:sid' do

@@ -23,19 +23,13 @@ $ bundle exec ruby episodes.rb
     ```
     $ heroku addons:add redistogo:nano
     ```
-3. Find out the Redis URL:
-    
-    ```
-    $ heroku config --app [APPNAME]
-      REDISTOGO_URL              => redis://redistogo:44ec0bc04dd4a5afe77a649acee7a8f3@drum.redistogo.com:9092/
-    ```
-4. You'll have to setup Episodes to use that url:
+3. You'll have to setup Episodes to use that url:
     
     ```
     $ vim episodes.rb
     ```
-   Replace `Redis.new` with `Redis.new(url: ENV['REDISTOGO_URL'])` in line 11.
-5. Ready to push!
+    Uncomment the lines in the helper section and comment out the line above.
+4. Ready to push!
     
     ```
     $ git push heroku
