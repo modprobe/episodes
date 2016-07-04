@@ -1,4 +1,8 @@
-# episodes
+# DEPRECATED
+
+The TVRage API has been shut down and as a consequence this app is now worthless. Someday™ I'll maybe update this to use another API, but this day is not today.
+
+## episodes
 
 Small [Sinatra](http://www.sinatrarb.com/) project using the [TVRage API](http://services.tvrage.com/) to find TV shows and a list of their episodes.
 
